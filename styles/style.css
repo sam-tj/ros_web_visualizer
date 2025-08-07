@@ -1,0 +1,6 @@
+.monaco-editor>* div {
+    --_margin: 0rem !important;
+    margin: 0rem !important;
+    /* padding: 0rem !important; */
+    border-radius: 0rem !important;
+}
