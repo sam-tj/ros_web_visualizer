@@ -81,7 +81,10 @@
           <article class="border center-align middle-align large-margin" style="height: 90%">
             <div class="padding">
               <h5>Problem with data.</h5>
-              <div>Please check the data entered / uploaded.</div>
+              <div>
+                Please check the data entered / uploaded.<br /><br />Maybe there is extra new lines
+                at the end of the input
+              </div>
             </div>
           </article>
         </div>
@@ -103,7 +106,7 @@
         <nav>
           <h5>About Project</h5>
           <div class="max"></div>
-          <button class="transparent circle" data-ui="#help"><i>close</i></button>
+          <button class="transparent circle wave" data-ui="#help"><i>close</i></button>
         </nav>
         <article class="border round">
           <img
@@ -127,7 +130,19 @@
             <hr class="small" />
             <p class="center-align">
               <a class="link" href="https://sam-tj.github.io/" target="_blank"
-                >Made with 🫶 by Sameer</a
+                >Made with&nbsp;
+                <picture>
+                  <source
+                    srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1faf6/512.webp"
+                    type="image/webp"
+                  />
+                  <img
+                    src="https://fonts.gstatic.com/s/e/notoemoji/latest/1faf6/512.gif"
+                    alt="🫶"
+                    width="32"
+                    height="32"
+                  /> </picture
+                >&nbsp;in München by Sameer</a
               >
             </p>
           </div>
@@ -137,21 +152,21 @@
         <nav>
           <h5>Settings</h5>
           <div class="max"></div>
-          <button class="transparent circle" onclick="darkLightThemeUpdate(this)">
+          <button class="transparent circle wave" onclick="darkLightThemeUpdate(this)">
             <i>dark_mode</i>
           </button>
           <button
-            class="transparent circle"
+            class="transparent circle wave"
             onclick="hidePanel(this)"
             id="dataRetrievalHelp_button"
           >
             <i>info</i>
             <div class="tooltip bottom">How to use this tool.</div>
           </button>
-          <button class="transparent circle" onclick="fullscreenSidePanel(this)">
+          <button class="transparent circle wave" onclick="fullscreenSidePanel(this)">
             <i>fullscreen</i>
           </button>
-          <button class="transparent circle" data-ui="#options"><i>close</i></button>
+          <button class="transparent circle wave" data-ui="#options"><i>close</i></button>
         </nav>
         <nav>
           <div class="tabs max">
@@ -193,7 +208,7 @@
                 <label>File Upload</label>
               </div>
             </nav>
-            <div class="medium-height" id="monacoEditor"></div>
+            <div class="medium-height tiny-padding" id="monacoEditor"></div>
           </article>
           <article class="medium-height">
             <div><h6>Initial Pose</h6></div>
