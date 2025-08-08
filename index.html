@@ -71,19 +71,18 @@
         <div
           id="plotContainer"
           class="responsive"
-          style="width: 100%; height: 100%; display: block"
+          style="width: 100%; height: 100%; display: none"
         ></div>
         <div
           id="plotContainer_replacement"
           class="responsive"
-          style="width: 100%; height: 100%; display: none"
+          style="width: 100%; height: 100%; display: block"
         >
           <article class="border center-align middle-align large-margin" style="height: 90%">
             <div class="padding">
-              <h5>Problem with data.</h5>
+              <h5 id="plotContainer_replacement_heading">Welcome :)</h5>
               <div>
-                Please check the data entered / uploaded.<br /><br />Maybe there is extra new lines
-                at the end of the input
+                <p id="plotContainer_replacement_text">Please select a topic to start.</p>
               </div>
             </div>
           </article>
@@ -132,12 +131,9 @@
               <a class="link" href="https://sam-tj.github.io/" target="_blank"
                 >Made with&nbsp;
                 <picture>
-                  <source
-                    srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1faf6/512.webp"
-                    type="image/webp"
-                  />
+                  <source srcset="./res/images/hands_heart.webp" type="image/webp" />
                   <img
-                    src="https://fonts.gstatic.com/s/e/notoemoji/latest/1faf6/512.gif"
+                    src="./res/images/hands_heart.gif"
                     alt="🫶"
                     width="32"
                     height="32"
@@ -197,7 +193,7 @@
             <nav class="max">
               <div class="field label border max">
                 <select id="rosTopicSelector">
-                  <option value="" disabled selected>Choose Topic</option>
+                  <option value="default" selected>Choose Topic</option>
                 </select>
                 <label>ROS Topic</label>
                 <i>arrow_drop_down</i>

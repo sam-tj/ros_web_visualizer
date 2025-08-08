@@ -2,14 +2,20 @@ var topicOptions = {
   LaserScan: {
     name: "LaserScan",
     function: laserScannerPlot,
-    sample: LaserScan_sample,
+    sample_path: "./res/data/laserScan_sample.yaml",
   },
   PointCloud2: {
     name: "PointCloud2",
     function: pointCloud2Plot,
-    sample: PointCloud2_sample,
+    sample_path: "./res/data/pointCloud2_sample.yaml",
   },
 };
+
+async function getYamlData(e) {
+  var res = await fetch(e, { mode: "no-cors" });
+  data = await res.text();
+  return { status: res.ok, data: data };
+}
 
 function plotUpdate() {
   console.log("Start");
@@ -23,18 +29,25 @@ function plotUpdate() {
   if (data.endsWith(regex.source)) {
     data = data.replace(regex, "");
   }
+
   try {
     var dataParsed = "";
     dataParsed = jsyaml.load(data);
-    toggle_plotcontainer(false);
+    toggle_plotcontainer({ hidePlot: false, showHome: false });
   } catch (e) {
     Plotly.purge(plotContainer);
-    toggle_plotcontainer(true);
+    toggle_plotcontainer({ hidePlot: true, showHome: false });
     console.error(e);
   }
-  if (Object.entries(dataParsed).length > 0) {
-    topicOptions[document.getElementById("rosTopicSelector").value].function(dataParsed);
-    console.log("End");
+  try {
+    if (Object.entries(dataParsed).length > 0) {
+      Plotly.purge(plotContainer);
+      topicOptions[document.getElementById("rosTopicSelector").value].function(dataParsed);
+      console.log("End");
+    }
+  } catch (e) {
+    // console.error(e);
+    console.log("End Fail");
   }
 }
 
@@ -209,7 +222,7 @@ var editor;
 
 window.addEventListener("load", function () {
   editor = monaco.editor.create(document.getElementById("monacoEditor"), {
-    value: Object.values(topicOptions)[0].sample,
+    value: "",
     language: "yaml",
     roundedSelection: false,
     scrollBeyondLastLine: false,
@@ -228,14 +241,22 @@ window.addEventListener("load", function () {
     topicSelector.appendChild(el);
   }
 
-  document.getElementById("rosTopicSelector").value = Object.keys(topicOptions)[0];
-  plotUpdate();
-
   editor.onDidChangeModelContent((e) => {
     plotUpdate();
   });
   document.getElementById("rosTopicSelector").addEventListener("change", function () {
-    window.editor.setValue(topicOptions[document.getElementById("rosTopicSelector").value].sample);
+    var selectorValue = document.getElementById("rosTopicSelector").value;
+    if (selectorValue === "default") {
+      window.editor.setValue("");
+      toggle_plotcontainer({ hidePlot: true, showHome: true });
+    } else {
+      (async () => {
+        updatedData = await getYamlData(topicOptions[selectorValue].sample_path);
+        if (updatedData.status === true) {
+          window.editor.setValue(updatedData.data);
+        }
+      })();
+    }
   });
 });
 
@@ -252,15 +273,24 @@ function fullscreenSidePanel(element) {
   }
 }
 
-function toggle_plotcontainer(hidePlot = true) {
+function toggle_plotcontainer({ hidePlot = true, showHome = true }) {
   var plotContainer_div = document.getElementById("plotContainer");
   var plotContainer_replacement = document.getElementById("plotContainer_replacement");
+  var plotContainer_replacement_H = document.getElementById("plotContainer_replacement_heading");
+  var plotContainer_replacement_P = document.getElementById("plotContainer_replacement_text");
   if (hidePlot === true) {
     plotContainer_div.style.display = "none";
     plotContainer_replacement.style.display = "block";
   } else {
     plotContainer_div.style.display = "block";
     plotContainer_replacement.style.display = "none";
+  }
+  if (showHome === true) {
+    plotContainer_replacement_H.innerHTML = "Welcome :)";
+    plotContainer_replacement_P.innerHTML = "Please select a topic to start.";
+  } else {
+    plotContainer_replacement_H.innerHTML = "Problem with data :(";
+    plotContainer_replacement_P.innerHTML = "Please check the data entered / uploaded.";
   }
 }
 
