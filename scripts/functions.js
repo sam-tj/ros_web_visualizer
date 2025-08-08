@@ -262,4 +262,8 @@ function toggle_plotcontainer(hidePlot = true) {
   }
 }
 
+function hidePanel(element) {
+  id = element.id.split("_")[0];
+  document.getElementById(id).classList.toggle("active");
+}
 // UI Functions End

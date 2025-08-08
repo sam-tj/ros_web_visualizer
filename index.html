@@ -20,6 +20,7 @@
     <meta name="twitter:creator" content="@sameert009" />
     <meta name="author" content="Sameer Tuteja" />
     <meta name="description" content="ROS Visualizer" />
+    <meta name="google" content="notranslate" />
     <meta
       name="keywords"
       content="Sameer,Tuteja,ROS,Robot Operating System,Visualizer,ROS Visualizer"
@@ -64,7 +65,7 @@
     <script src="./scripts/functions.js"></script>
     <!-- Included files End -->
   </head>
-  <body>
+  <body class="dark">
     <main class="responsive max">
       <div class="fixed top left right bottom">
         <div
@@ -88,19 +89,60 @@
       <div class="fixed top left margin">
         <nav>
           <button class="circle white black-text wave dark" data-ui="#options">
-            <i>Settings</i>
+            <i>left_panel_open</i>
+            <div class="tooltip bottom">Side Panel</div>
           </button>
+
           <button class="circle white black-text wave dark" data-ui="#help">
             <i>help</i>
-            <div class="tooltip right">About</div>
+            <div class="tooltip bottom">About</div>
           </button>
         </nav>
       </div>
+      <div class="overlay blur"></div>
+      <dialog id="help">
+        <nav>
+          <h5>About Project</h5>
+          <div class="max"></div>
+          <button class="transparent circle" data-ui="#help"><i>close</i></button>
+        </nav>
+        <article class="border round">
+          <img
+            class="responsive small top-round"
+            src="./res/images/Gemini_Generated_Image_makc5zmakc5zmakc.png"
+          />
+          <div class="padding">
+            <h5>Ever felt stuck debugging a robot, wishing you had a snapshot of its senses? 📸</h5>
+            <p class="large-text">
+              When you're trying to find a bug, sometimes all you need is a single, clear look at
+              what your robot is experiencing. The ROS Multi-Message Visualizer is a tool that gives
+              you that crucial "snapshot moment."<br /><br />
+              It acts as a digital camera for your robot's perception data, allowing you to
+              instantly load and visualize key messages like <em>point clouds</em>,
+              <em>laser scans</em> or <em>images</em>. This single, clean interface helps you
+              pinpoint problems by providing immediate clarity on what the robot is seeing, feeling,
+              and where it is.<br /><br />
+              Whether you're debugging a faulty sensor or validating a new algorithm, this tool
+              gives you the visual context you need to move past a roadblock and find your solution.
+            </p>
+            <hr class="small" />
+            <p class="center-align">
+              <a class="link" href="https://sam-tj.github.io/" target="_blank"
+                >Made with 🫶 by Sameer</a
+              >
+            </p>
+          </div>
+        </article>
+      </dialog>
       <dialog class="left large" id="options">
         <nav>
           <h5>Settings</h5>
           <div class="max"></div>
-          <button class="transparent circle">
+          <button
+            class="transparent circle"
+            onclick="hidePanel(this)"
+            id="dataRetrievalHelp_button"
+          >
             <i>info</i>
             <div class="tooltip bottom">How to use this tool.</div>
           </button>
@@ -117,6 +159,22 @@
         </nav>
         <div class="space"></div>
         <div class="page active scroll" style="position: relative" id="msgPage">
+          <article class="page" id="dataRetrievalHelp">
+            <div><h6>Help</h6></div>
+            <div>
+              <h7>ROS 1</h7>
+              <p>For printing it in terminal:</p>
+              <pre><code>rostopic echo /topic -n 1</code></pre>
+              <p>For saving it as a file:</p>
+              <pre><code>rostopic echo /topic -n 1 > output.yaml</code></pre>
+              <hr class="large" />
+              <h7>ROS 2</h7>
+              <p>For printing it in terminal:</p>
+              <pre><code>ros2 topic echo /topic --once --flow-style --full-length</code></pre>
+              <p>For saving it as a file:</p>
+              <pre><code>ros2 topic echo /topic --once --flow-style --full-length > output.yaml</code></pre>
+            </div>
+          </article>
           <article>
             <h6>Input</h6>
             <nav class="max">
