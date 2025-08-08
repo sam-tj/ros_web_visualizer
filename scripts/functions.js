@@ -287,7 +287,8 @@ function toggle_plotcontainer({ hidePlot = true, showHome = true }) {
   }
   if (showHome === true) {
     plotContainer_replacement_H.innerHTML = "Welcome :)";
-    plotContainer_replacement_P.innerHTML = "Please select a topic to start.";
+    plotContainer_replacement_P.innerHTML =
+      "Please select a topic to begin.<br />Use <i>left_panel_open</i>to start.";
   } else {
     plotContainer_replacement_H.innerHTML = "Problem with data :(";
     plotContainer_replacement_P.innerHTML = "Please check the data entered / uploaded.";
