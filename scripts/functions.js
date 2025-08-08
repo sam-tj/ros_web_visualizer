@@ -25,7 +25,7 @@ function plotUpdate() {
   } catch (e) {
     Plotly.purge(plotContainer);
     toggle_plotcontainer(true);
-    console.log(e);
+    console.error(e);
   }
   if (Object.entries(dataParsed).length > 0) {
     topicOptions[document.getElementById("rosTopicSelector").value].function(dataParsed);
@@ -227,22 +227,19 @@ window.addEventListener("load", function () {
   plotUpdate();
 
   editor.onDidChangeModelContent((e) => {
-    console.log("Update Chart on code");
     plotUpdate();
   });
   document.getElementById("rosTopicSelector").addEventListener("change", function () {
-    console.log("Update Chart on select");
     window.editor.setValue(topicOptions[document.getElementById("rosTopicSelector").value].sample);
   });
 });
 
 // UI Functions Start
 
-function fullscreen_sidePanel(element) {
+function fullscreenSidePanel(element) {
   e = document.getElementById("options").classList;
   e.toggle("large");
   e.toggle("max");
-  console.log(element.innerHTML);
   if (element.innerHTML.includes("<i>fullscreen</i>")) {
     element.innerHTML = "<i>fullscreen_exit</i>";
   } else {
@@ -265,5 +262,17 @@ function toggle_plotcontainer(hidePlot = true) {
 function hidePanel(element) {
   id = element.id.split("_")[0];
   document.getElementById(id).classList.toggle("active");
+}
+
+function darkLightThemeUpdate(element) {
+  e = document.getElementById("body").classList;
+  e.toggle("dark");
+  if (element.innerHTML.includes("<i>dark_mode</i>")) {
+    monaco.editor.setTheme("vs-light");
+    element.innerHTML = "<i>light_mode</i>";
+  } else {
+    monaco.editor.setTheme("vs-dark");
+    element.innerHTML = "<i>dark_mode</i>";
+  }
 }
 // UI Functions End

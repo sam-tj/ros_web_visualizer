@@ -65,7 +65,7 @@
     <script src="./scripts/functions.js"></script>
     <!-- Included files End -->
   </head>
-  <body class="dark">
+  <body id="body" class="dark">
     <main class="responsive max">
       <div class="fixed top left right bottom">
         <div
@@ -92,7 +92,6 @@
             <i>left_panel_open</i>
             <div class="tooltip bottom">Side Panel</div>
           </button>
-
           <button class="circle white black-text wave dark" data-ui="#help">
             <i>help</i>
             <div class="tooltip bottom">About</div>
@@ -138,6 +137,9 @@
         <nav>
           <h5>Settings</h5>
           <div class="max"></div>
+          <button class="transparent circle" onclick="darkLightThemeUpdate(this)">
+            <i>dark_mode</i>
+          </button>
           <button
             class="transparent circle"
             onclick="hidePanel(this)"
@@ -146,7 +148,7 @@
             <i>info</i>
             <div class="tooltip bottom">How to use this tool.</div>
           </button>
-          <button class="transparent circle" onclick="fullscreen_sidePanel(this)">
+          <button class="transparent circle" onclick="fullscreenSidePanel(this)">
             <i>fullscreen</i>
           </button>
           <button class="transparent circle" data-ui="#options"><i>close</i></button>
