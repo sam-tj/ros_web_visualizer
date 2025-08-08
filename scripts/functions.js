@@ -1,13 +1,13 @@
 var topicOptions = {
-  PointCloud2: {
-    name: "PointCloud2",
-    function: pointCloud2Plot,
-    sample: PointCloud2_sample,
-  },
   LaserScan: {
     name: "LaserScan",
     function: laserScannerPlot,
     sample: LaserScan_sample,
+  },
+  PointCloud2: {
+    name: "PointCloud2",
+    function: pointCloud2Plot,
+    sample: PointCloud2_sample,
   },
 };
 
