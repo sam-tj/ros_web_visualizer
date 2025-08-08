@@ -15,6 +15,11 @@ function plotUpdate() {
   console.log("Start");
   var data = window.editor.getValue();
   const regex = /---/;
+  // console.log(data[data.length - 1]); //character check https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
+  // console.log("as" + data.charCodeAt([data.length - 1]));
+  if (data.endsWith("\n") | data.endsWith("\r") | data.endsWith("\r\n") | data.endsWith("\n\r")) {
+    data = data.slice(0, -2);
+  }
   if (data.endsWith(regex.source)) {
     data = data.replace(regex, "");
   }
