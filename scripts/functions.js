@@ -20,14 +20,16 @@ async function getYamlData(e) {
 function plotUpdate() {
   console.log("Start");
   var data = window.editor.getValue();
-  const regex = /---/;
+  const regexEndLine = /---/;
+  const regexNewLine = /[\n\r]/g;
+  data = data.replace(regexNewLine, "\n");
   // console.log(data[data.length - 1]); //character check https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
   // console.log("as" + data.charCodeAt([data.length - 1]));
-  if (data.endsWith("\n") | data.endsWith("\r") | data.endsWith("\r\n") | data.endsWith("\n\r")) {
-    data = data.slice(0, -2);
+  if (data.endsWith("\n")) {
+    data = data.slice(0, -1);
   }
-  if (data.endsWith(regex.source)) {
-    data = data.replace(regex, "");
+  if (data.endsWith(regexEndLine.source)) {
+    data = data.replace(regexEndLine, "");
   }
 
   try {
