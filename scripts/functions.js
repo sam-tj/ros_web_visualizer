@@ -7,7 +7,7 @@ var topicOptions = {
   PointCloud2: {
     name: "PointCloud2",
     function: pointCloud2Plot,
-    sample_path: "./res/data/pointCloud2_sample.yaml",
+    sample_path: "./res/data/s3dScanner_sample.yaml",
   },
 };
 
@@ -208,13 +208,14 @@ async function pointCloud2Plot(dataParsed) {
     title: {
       text: "Pointcloud Data",
     },
+    margin: { l: 0, r: 0, b: 0, t: 30 },
     scene: {
-      xaxis: { title: "X (Forward)", range: [-20, 20] },
-      yaxis: { title: "Y (Left)", range: [-20, 20] },
-      zaxis: { title: "Z (Up)", range: [-10, 10] },
-      aspectmode: "cube",
+      xaxis: { title: "X (Forward)" },
+      yaxis: { title: "Y (Left)" },
+      zaxis: { title: "Z (Up)" },
+      aspectmode: "auto",
     },
-    hovermode: "closest",
+    // hovermode: "closest",
   };
   var config = { responsive: true };
 
@@ -233,6 +234,7 @@ window.addEventListener("load", function () {
     automaticLayout: true,
     glyphMargin: true,
     theme: "vs-dark",
+    renderLineHighlight: "none",
   });
 
   var topicSelector = document.getElementById("rosTopicSelector");
