@@ -37,16 +37,23 @@ function plotUpdate() {
     dataParsed = jsyaml.load(data);
     toggle_plotcontainer({ hidePlot: false, showHome: false });
   } catch (e) {
-    Plotly.purge(plotContainer);
+    clearContainer();
     toggle_plotcontainer({ hidePlot: true, showHome: false });
     console.error(e);
   }
   try {
     if (Object.entries(dataParsed).length > 0) {
-      Plotly.purge(plotContainer);
-      topicOptions[document.getElementById("rosTopicSelector").value].function(dataParsed);
+      clearContainer();
+      topicOptions[document.getElementById("rosTopicSelector").value]
+        .function(dataParsed)
+        .then((value) => {
+          if (value === true) {
       blinkButton("sidePanelCLoseButton", 5);
       console.log("End");
+          } else {
+            throw new Error("Plot failed");
+          }
+        });
     }
   } catch (e) {
     // console.error(e);
@@ -85,6 +92,7 @@ async function laserScannerPlot(dataParsed) {
   var config = { responsive: true };
 
   Plotly.newPlot("plotContainer", data, layout, config);
+  return true;
 }
 
 async function pointCloud2Plot(dataParsed) {
@@ -169,7 +177,6 @@ async function pointCloud2Plot(dataParsed) {
   const xAxis = [];
   const yAxis = [];
   const zAxis = [];
-  const colors = [];
   const intensities = [];
 
   points.forEach((p) => {
@@ -181,8 +188,6 @@ async function pointCloud2Plot(dataParsed) {
     yAxis.push(p.y);
     zAxis.push(p.z);
     intensities.push(p.intensity);
-    const hue = (p.intensity / 255) * 240; // Map intensity 0-255 to hue 0-240 (blue to red)
-    colors.push(`hsl(${hue}, 100%, 50%)`);
   });
 
   var trace1 = {
@@ -194,9 +199,8 @@ async function pointCloud2Plot(dataParsed) {
       size: 3,
       color: intensities,
       colorscale: "Jet", // or 'Jet', 'Portland', etc.
-      cmin: 0,
-      cmax: 255,
-      showscale: true, // Show the color bar if using colorscale
+
+      showscale: true,
     },
     type: "scatter3d",
   };
@@ -215,11 +219,11 @@ async function pointCloud2Plot(dataParsed) {
       zaxis: { title: "Z (Up)" },
       aspectmode: "auto",
     },
-    // hovermode: "closest",
   };
   var config = { responsive: true };
 
   Plotly.newPlot("plotContainer", data, layout, config);
+  return true;
 }
 
 var editor;
@@ -346,6 +350,10 @@ function blinkButton(element, counter) {
       clearInterval(blinkInterval);
     }
   }, 500);
+}
+
+function clearContainer() {
+  Plotly.purge(plotContainer);
 }
 // UI Functions End
 
