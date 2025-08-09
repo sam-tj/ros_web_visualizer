@@ -9,6 +9,11 @@ var topicOptions = {
     function: pointCloud2Plot,
     sample_path: "./res/data/s3dScanner_sample.yaml",
   },
+  Image: {
+    name: "Image",
+    function: imagePlot,
+    sample_path: "./res/data/monoImage_sample.yaml",
+  },
 };
 
 async function getYamlData(e) {
@@ -48,8 +53,8 @@ function plotUpdate() {
         .function(dataParsed)
         .then((value) => {
           if (value === true) {
-      blinkButton("sidePanelCLoseButton", 5);
-      console.log("End");
+            blinkButton("sidePanelCLoseButton", 5);
+            console.log("End");
           } else {
             throw new Error("Plot failed");
           }
@@ -225,6 +230,78 @@ async function pointCloud2Plot(dataParsed) {
   Plotly.newPlot("plotContainer", data, layout, config);
   return true;
 }
+async function imagePlot(dataParsed) {
+  let ret = false;
+  const containerDiv = document.getElementById("plotContainer");
+  const newCanvas = document.createElement("canvas");
+  newCanvas.id = "plotContainerCanvas";
+  newCanvas.classList.add("absolute", "center", "middle");
+  containerDiv.appendChild(newCanvas);
+
+  let inputMat, outputMat;
+
+  try {
+    switch (dataParsed.encoding) {
+      case "mono8":
+      case "rgb8":
+      case "bgr8":
+        cvType = dataParsed.encoding === "mono8" ? cv.CV_8UC1 : cv.CV_8UC3;
+        typedArray = new Uint8Array(dataParsed.data);
+        break;
+      case "rgba8":
+      case "bgra8":
+        cvType = cv.CV_8UC4;
+        typedArray = new Uint8Array(dataParsed.data);
+        break;
+      case "16UC1":
+        cvType = cv.CV_16UC1;
+        const uint16Mat = new Uint16Array(dataParsed.data);
+        inputMat = new cv.Mat(dataParsed.height, dataParsed.width, cv.CV_16UC1);
+        inputMat.data.set(uint16Mat);
+        break;
+      case "32FC1":
+        cvType = cv.CV_32FC1;
+        const float32Mat = new Float32Array(dataParsed.data);
+        inputMat = new cv.Mat(dataParsed.height, dataParsed.width, cv.CV_32FC1);
+        inputMat.data.set(float32Mat);
+        break;
+      default:
+        console.warn(`Unsupported ROS image encoding: ${dataParsed.encoding}`);
+    }
+    if (!(dataParsed.encoding === "16UC1" || dataParsed.encoding === "32FC1")) {
+      inputMat = cv.matFromArray(dataParsed.height, dataParsed.width, cvType, typedArray);
+    }
+    outputMat = new cv.Mat();
+
+    // Handle specific conversions based on encoding
+    if (dataParsed.encoding === "16UC1" || dataParsed.encoding === "32FC1") {
+      let convertedMat = new cv.Mat();
+      cv.normalize(inputMat, convertedMat, 0, 255, cv.NORM_MINMAX, cv.CV_8UC1);
+      cv.cvtColor(convertedMat, outputMat, cv.COLOR_GRAY2RGBA);
+      convertedMat.delete();
+    } else if (dataParsed.encoding === "mono8") {
+      cv.cvtColor(inputMat, outputMat, cv.COLOR_GRAY2RGBA);
+    } else if (dataParsed.encoding === "rgb8") {
+      cv.cvtColor(inputMat, outputMat, cv.COLOR_RGB2RGBA);
+    } else if (dataParsed.encoding === "bgr8") {
+      cv.cvtColor(inputMat, outputMat, cv.COLOR_BGR2RGBA);
+    } else {
+      // Already RGBA or BGRA
+      outputMat = inputMat;
+    }
+
+    cv.imshow(newCanvas, outputMat);
+    ret = true;
+  } catch (e) {
+    console.error("Error processing image with OpenCV.js:", e);
+    ret = false;
+  } finally {
+    // Clean up the allocated memory
+    if (inputMat) inputMat.delete();
+    if (outputMat && outputMat !== inputMat) outputMat.delete();
+  }
+  return ret;
+}
 
 var editor;
 
@@ -354,6 +431,10 @@ function blinkButton(element, counter) {
 
 function clearContainer() {
   Plotly.purge(plotContainer);
+  const canvasToRemove = document.getElementById("plotContainerCanvas");
+  if (canvasToRemove) {
+    canvasToRemove.parentNode.removeChild(canvasToRemove);
+  }
 }
 // UI Functions End
 
