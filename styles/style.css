@@ -4,3 +4,7 @@
     /* padding: 0rem !important; */
     border-radius: 0rem !important;
 }
+
+.monaco-editor {
+    --vscode-focusBorder: #00000000 !important;
+}
