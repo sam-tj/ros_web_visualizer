@@ -3,16 +3,19 @@ var topicOptions = {
     name: "LaserScan",
     function: laserScannerPlot,
     sample_path: "./res/data/laserScan_sample.yaml",
+    docs: rosMessageDefinitions["sensor_msgs/LaserScan"],
   },
   PointCloud2: {
     name: "PointCloud2",
     function: pointCloud2Plot,
     sample_path: "./res/data/s3dScanner_sample.yaml",
+    docs: rosMessageDefinitions["sensor_msgs/PointCloud2"],
   },
   Image: {
     name: "Image",
     function: imagePlot,
     sample_path: "./res/data/monoImage_sample.yaml",
+    docs: rosMessageDefinitions["sensor_msgs/Image"],
   },
 };
 
@@ -336,9 +339,11 @@ window.addEventListener("load", function () {
       window.editor.setValue("");
       document.getElementById("fileUpload_input").disabled = true;
       toggle_plotcontainer({ hidePlot: true, showHome: true });
+      document.getElementById("msgInfoPanel_div").innerHTML = "";
     } else {
       (async () => {
         updatedData = await getYamlData(topicOptions[selectorValue].sample_path);
+        updateMsgInfoPanel(topicOptions[selectorValue].docs);
         if (updatedData.status === true) {
           window.editor.setValue(updatedData.data);
           document.getElementById("fileUpload_input").disabled = false;
@@ -436,11 +441,44 @@ function clearContainer() {
     canvasToRemove.parentNode.removeChild(canvasToRemove);
   }
 }
+
+function updateMsgInfoPanel(messageDetails) {
+  const infoDisplay = document.getElementById("msgInfoPanel_div");
+  let htmlContent = `
+  <article>
+    <div><h6 class="wordWrap">${messageDetails.messageType}</h6></div>
+    <p class="wordWrap medium-text">${messageDetails.description}</p>
+    <p class="bold">Fields:</p>
+    <hr />
+    <div class="responsive">
+      <ul class="list border">
+  `;
+
+  messageDetails.fields.forEach((field) => {
+    htmlContent += `
+    <li>
+      <button class="circle">${field.type.charAt(0)}</button>
+      <div class="max">
+        <p class="large-text">${field.name}</p>
+        <p class="italic no-margin">${field.type}</p>
+        <p class="wordWrap small-text">${field.description}</p>
+      </div>
+    </li>
+  `;
+  });
+
+  htmlContent += `
+      </ul>
+    </div>
+  </article>
+  `;
+  infoDisplay.innerHTML = htmlContent;
+}
 // UI Functions End
 
 var Module = {
   // https://emscripten.org/docs/api_reference/module.html#Module.onRuntimeInitialized
   onRuntimeInitialized() {
-    console.log("OpenCV.js is ready.");
+    console.log("Ready.");
   },
 };

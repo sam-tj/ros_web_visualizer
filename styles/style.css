@@ -8,3 +8,8 @@
 .monaco-editor {
     --vscode-focusBorder: #00000000 !important;
 }
+
+.wordWrap {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}

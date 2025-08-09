@@ -51,6 +51,7 @@
     <!-- Required packages End -->
     <!-- Included files Start -->
     <link rel="stylesheet" href="./styles/style.css" />
+    <script src="./res/data/message_definitions.js"></script>
     <script src="./scripts/functions.js"></script>
     <!-- Included files End -->
   </head>
@@ -168,7 +169,6 @@
             <a data-ui="#docsPage">Docs</a>
           </div>
         </nav>
-        <div class="space"></div>
         <div class="page active scroll" style="position: relative" id="msgPage">
           <article class="page" id="dataRetrievalHelp">
             <div><h6>Help</h6></div>
@@ -215,23 +215,8 @@
           </article>
         </div>
         <div class="page" style="position: relative" id="docsPage">
-          <h6>What does your message say...</h6>
-          <article class="small-height">
-            <div><h6>...</h6></div>
-            <div class="large-padding"></div>
-          </article>
-          <article class="small-height">
-            <div><h6>...</h6></div>
-            <div class="large-padding"></div>
-          </article>
-          <article class="small-height">
-            <div><h6>...</h6></div>
-            <div class="large-padding"></div>
-          </article>
-          <article class="small-height">
-            <div><h6>...</h6></div>
-            <div class="large-padding"></div>
-          </article>
+          <h6 class="tiny-padding">Info about the message →</h6>
+          <div id="msgInfoPanel_div"></div>
         </div>
       </dialog>
     </main>
