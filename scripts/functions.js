@@ -4,18 +4,21 @@ var topicOptions = {
     function: laserScannerPlot,
     sample_path: "./res/data/laserScan_sample.yaml",
     docs: rosMessageDefinitions["sensor_msgs/LaserScan"],
+    uiOptions: ["scanFilter", "initialPoseSetting", "plotUIControl"],
   },
   PointCloud2: {
     name: "PointCloud2",
     function: pointCloud2Plot,
     sample_path: "./res/data/s3dScanner_sample.yaml",
     docs: rosMessageDefinitions["sensor_msgs/PointCloud2"],
+    uiOptions: ["scanFilter", "plotUIControl"],
   },
   Image: {
     name: "Image",
     function: imagePlot,
     sample_path: "./res/data/monoImage_sample.yaml",
     docs: rosMessageDefinitions["sensor_msgs/Image"],
+    uiOptions: [],
   },
 };
 
@@ -340,9 +343,11 @@ window.addEventListener("load", function () {
       document.getElementById("fileUpload_input").disabled = true;
       toggle_plotcontainer({ hidePlot: true, showHome: true });
       document.getElementById("msgInfoPanel_div").innerHTML = "";
+      document.getElementById("msgDynamicPanel_div").innerHTML = "";
     } else {
       (async () => {
         updatedData = await getYamlData(topicOptions[selectorValue].sample_path);
+        updataDynamicPanel(topicOptions[selectorValue].uiOptions);
         updateMsgInfoPanel(topicOptions[selectorValue].docs);
         if (updatedData.status === true) {
           window.editor.setValue(updatedData.data);
@@ -440,6 +445,22 @@ function clearContainer() {
   if (canvasToRemove) {
     canvasToRemove.parentNode.removeChild(canvasToRemove);
   }
+}
+
+function updataDynamicPanel(panelDetails) {
+  const panelsContainer = document.getElementById("msgDynamicPanel_div");
+  panelsContainer.classList.add("large-blur");
+  panelsContainer.innerHTML = "";
+  panelDetails.forEach((panelId) => {
+    const panelHtml = rosMessageUiPanels[panelId];
+    if (panelHtml) {
+      const panelElement = document.createElement("article");
+      panelElement.classList.add("top-margin");
+      panelElement.id = "msgPanel_" + panelId;
+      panelElement.innerHTML = panelHtml;
+      panelsContainer.appendChild(panelElement);
+    }
+  });
 }
 
 function updateMsgInfoPanel(messageDetails) {

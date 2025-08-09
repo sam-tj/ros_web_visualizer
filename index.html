@@ -52,6 +52,7 @@
     <!-- Included files Start -->
     <link rel="stylesheet" href="./styles/style.css" />
     <script src="./res/data/message_definitions.js"></script>
+    <script src="./res/data/message_panels.js"></script>
     <script src="./scripts/functions.js"></script>
     <!-- Included files End -->
   </head>
@@ -205,14 +206,7 @@
             <div class="tiny-space"></div>
             <div class="medium-height tiny-padding" id="monacoEditor"></div>
           </article>
-          <article class="medium-height">
-            <div><h6>Initial Pose</h6></div>
-            <div class="large-padding"></div>
-          </article>
-          <article class="medium-height">
-            <div><h6>Plot Control</h6></div>
-            <div class="large-padding"></div>
-          </article>
+          <div id="msgDynamicPanel_div"></div>
         </div>
         <div class="page" style="position: relative" id="docsPage">
           <h6 class="tiny-padding">Info about the message →</h6>
