@@ -348,3 +348,10 @@ function blinkButton(element, counter) {
   }, 500);
 }
 // UI Functions End
+
+var Module = {
+  // https://emscripten.org/docs/api_reference/module.html#Module.onRuntimeInitialized
+  onRuntimeInitialized() {
+    console.log("OpenCV.js is ready.");
+  },
+};
