@@ -24,7 +24,7 @@ function plotUpdate() {
   const regexNewLine = /[\n\r]/g;
   data = data.replace(regexNewLine, "\n");
   // console.log(data[data.length - 1]); //character check https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
-  // console.log("as" + data.charCodeAt([data.length - 1]));
+  // console.log("ASCII: " + data.charCodeAt([data.length - 1]));
   if (data.endsWith("\n")) {
     data = data.slice(0, -1);
   }
@@ -253,17 +253,37 @@ window.addEventListener("load", function () {
     var selectorValue = document.getElementById("rosTopicSelector").value;
     if (selectorValue === "default") {
       window.editor.setValue("");
+      document.getElementById("fileUpload_input").disabled = true;
       toggle_plotcontainer({ hidePlot: true, showHome: true });
     } else {
       (async () => {
         updatedData = await getYamlData(topicOptions[selectorValue].sample_path);
         if (updatedData.status === true) {
           window.editor.setValue(updatedData.data);
+          document.getElementById("fileUpload_input").disabled = false;
         }
       })();
     }
   });
+  document.getElementById("fileUpload_input").addEventListener("change", readUploadedFile);
 });
+
+function readUploadedFile(e) {
+  const fileUpload = document.getElementById("fileUpload_input");
+  const file = fileUpload.files[0];
+  const reader = new FileReader();
+  reader.addEventListener(
+    "load",
+    () => {
+      window.editor.setValue(reader.result);
+    },
+    false
+  );
+
+  if (file) {
+    reader.readAsText(file);
+  }
+}
 
 // UI Functions Start
 
