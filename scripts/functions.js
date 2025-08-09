@@ -45,6 +45,7 @@ function plotUpdate() {
     if (Object.entries(dataParsed).length > 0) {
       Plotly.purge(plotContainer);
       topicOptions[document.getElementById("rosTopicSelector").value].function(dataParsed);
+      blinkButton("sidePanelCLoseButton", 5);
       console.log("End");
     }
   } catch (e) {
@@ -290,7 +291,7 @@ function toggle_plotcontainer({ hidePlot = true, showHome = true }) {
   if (showHome === true) {
     plotContainer_replacement_H.innerHTML = "Welcome :)";
     plotContainer_replacement_P.innerHTML =
-      "Please select a topic to begin.<br />Use <i>left_panel_open</i>to start.";
+      "Please select a topic to begin.<br />Use <i>left_panel_open</i> to start.<br /><br />To learn more about the project, tap <i>help</i>.";
   } else {
     plotContainer_replacement_H.innerHTML = "Problem with data :(";
     plotContainer_replacement_P.innerHTML = "Please check the data entered / uploaded.";
@@ -312,5 +313,16 @@ function darkLightThemeUpdate(element) {
     monaco.editor.setTheme("vs-dark");
     element.innerHTML = "<i>dark_mode</i>";
   }
+}
+
+function blinkButton(element, counter) {
+  var blinkCounter = 0;
+  var blinkInterval = setInterval(() => {
+    blinkCounter += 1;
+    this.document.getElementById(element).classList.toggle("tertiary");
+    if (blinkCounter > counter) {
+      clearInterval(blinkInterval);
+    }
+  }, 500);
 }
 // UI Functions End

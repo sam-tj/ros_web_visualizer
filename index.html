@@ -86,7 +86,8 @@
               <h5 id="plotContainer_replacement_heading">Welcome :)</h5>
               <div>
                 <p id="plotContainer_replacement_text">
-                  Please select a topic to begin.<br />Use <i>left_panel_open</i>to start.
+                  Please select a topic to begin.<br />Use <i>left_panel_open</i> to start.<br /><br />To
+                  learn more about the project, tap <i>help</i>.
                 </p>
               </div>
             </div>
@@ -167,7 +168,9 @@
           <button class="transparent circle wave" onclick="fullscreenSidePanel(this)">
             <i>fullscreen</i>
           </button>
-          <button class="transparent circle wave" data-ui="#options"><i>close</i></button>
+          <button class="transparent circle wave" id="sidePanelCLoseButton" data-ui="#options">
+            <i>close</i>
+          </button>
         </nav>
         <nav>
           <div class="tabs max">
@@ -222,7 +225,7 @@
           </article>
         </div>
         <div class="page" style="position: relative" id="docsPage">
-          <h6>What does you message say...</h6>
+          <h6>What does your message say...</h6>
           <article class="small-height">
             <div><h6>...</h6></div>
             <div class="large-padding"></div>
