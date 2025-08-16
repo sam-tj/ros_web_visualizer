@@ -4,7 +4,7 @@ var topicOptions = {
     function: laserScannerPlot,
     sample_path: "./res/data/laserScan_sample.yaml",
     docs: rosMessageDefinitions["sensor_msgs/LaserScan"],
-    uiOptions: ["scanFilter", "initialPoseSetting", "plotUIControl"],
+    uiOptions: ["plotUIControl2D", "scanFilter2D"],
   },
   PointCloud2: {
     name: "PointCloud2",
@@ -27,6 +27,8 @@ async function getYamlData(e) {
   data = await res.text();
   return { status: res.ok, data: data };
 }
+
+let currentScanData = null;
 
 function plotUpdate() {
   console.log("Start");
@@ -85,11 +87,18 @@ async function laserScannerPlot(dataParsed) {
       return parseFloat(element) * Math.sin(startAngle + (index + 1) * incrementAngle);
   });
 
+  currentScanData = { x: xAxis, y: yAxis, ranges: dataParsed.ranges };
+
+  const markerSize = 3;
+
   var trace1 = {
     x: xAxis,
     y: yAxis,
     mode: "markers",
     type: "scatter",
+    marker: {
+      size: markerSize,
+    },
   };
 
   var data = [trace1];
@@ -100,9 +109,27 @@ async function laserScannerPlot(dataParsed) {
       text: "Scanner Data",
     },
   };
-  var config = { responsive: true };
+  var config = {
+    responsive: true,
+    displayModeBar: true,
+  };
 
   Plotly.newPlot("plotContainer", data, layout, config);
+
+  const newMaxRange = getMaxRangeFromData(currentScanData);
+  const maxRangeSlider = document.getElementById("scanFilterMaxRange2D_input");
+  maxRangeSlider.max = newMaxRange;
+  maxRangeSlider.value = newMaxRange;
+
+  const pointSizeSlider = document.getElementById("pointSize2D_input");
+  pointSizeSlider.value = markerSize;
+
+  // const angleMin = dataParsed.angle_min;
+  // const angleMax = dataParsed.angle_max;
+  // const minAngleSlider = document.getElementById("scanFilterMinAngle2D_input");
+  // minAngleSlider.min = angleMin;
+  // minAngleSlider.max = angleMax;
+  // minAngleSlider.value = angleMin;
   return true;
 }
 
@@ -449,7 +476,7 @@ function clearContainer() {
 
 function updataDynamicPanel(panelDetails) {
   const panelsContainer = document.getElementById("msgDynamicPanel_div");
-  panelsContainer.classList.add("large-blur");
+  // panelsContainer.classList.add("large-blur");
   panelsContainer.innerHTML = "";
   panelDetails.forEach((panelId) => {
     const panelHtml = rosMessageUiPanels[panelId];
