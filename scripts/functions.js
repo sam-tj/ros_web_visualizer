@@ -11,7 +11,7 @@ var topicOptions = {
     function: pointCloud2Plot,
     sample_path: "./res/data/s3dScanner_sample.yaml",
     docs: rosMessageDefinitions["sensor_msgs/PointCloud2"],
-    uiOptions: ["scanFilter", "plotUIControl"],
+    uiOptions: ["plotUIControl3D", "scanFilter3D"],
   },
   Image: {
     name: "Image",
@@ -228,13 +228,15 @@ async function pointCloud2Plot(dataParsed) {
     intensities.push(p.intensity);
   });
 
+  currentScanData = { x: xAxis, y: yAxis, z: zAxis, intensities: intensities };
+  const markerSize = 3;
   var trace1 = {
     x: xAxis,
     y: yAxis,
     z: zAxis,
     mode: "markers",
     marker: {
-      size: 3,
+      size: markerSize,
       color: intensities,
       colorscale: "Jet", // or 'Jet', 'Portland', etc.
 
@@ -258,9 +260,25 @@ async function pointCloud2Plot(dataParsed) {
       aspectmode: "auto",
     },
   };
-  var config = { responsive: true };
+  var config = {
+    responsive: true,
+    displayModeBar: true,
+  };
 
   Plotly.newPlot("plotContainer", data, layout, config);
+
+  const newMaxRange = getMaxRangeFromData(currentScanData);
+  const maxRangeSlider = document.getElementById("scanFilterMaxRange3D_input");
+  maxRangeSlider.max = newMaxRange;
+  maxRangeSlider.value = newMaxRange;
+
+  const maxIntensity = Math.max(...intensities);
+  const minIntensitySlider = document.getElementById("scanFilterMinIntensity3D_input");
+  minIntensitySlider.max = maxIntensity;
+
+  const pointSizeSlider = document.getElementById("pointSize3D_input");
+  pointSizeSlider.value = markerSize;
+
   return true;
 }
 async function imagePlot(dataParsed) {
